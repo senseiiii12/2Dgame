@@ -6,8 +6,10 @@ public class PlayerScript : MonoBehaviour
 {
     private Rigidbody2D rigidBody2D;
     private float horizontal;
+    private CapsuleCollider2D capsuleCollider2D;
     private bool isGrounded;
-    int countJumps = 0;
+    int countJumps;
+    public int countJumpsValue;
 
     [SerializeField]
     private float speed, jumpForse;
@@ -20,6 +22,7 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         rigidBody2D = GetComponent<Rigidbody2D>();
+        capsuleCollider2D = GetComponent<CapsuleCollider2D>();
     }
 
     // Update is called once per frame
@@ -28,8 +31,9 @@ public class PlayerScript : MonoBehaviour
         horizontal = Input.GetAxisRaw("Horizontal");
         FixedUpdate();
         flip();
-        jump();
         checkIsGround();
+        jump();
+        shoot();
         
         
     }
@@ -40,38 +44,39 @@ public class PlayerScript : MonoBehaviour
     }
     private void flip()
     {
-        if (horizontal < 0.0f)
+        if (Input.GetAxis("Horizontal") > 0)
         {
-            transform.localScale = new Vector3(1.0f, -1.0f, 1.0f);
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
         }
-        else if (horizontal > 0.0f)
+        else if (Input.GetAxis("Horizontal") < 0)
         {
-            transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            transform.localRotation = Quaternion.Euler(0, -180, 0);
         }
     }
 
     private void jump()
     {
-        
-        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (isGrounded)
         {
-            countJumps++;
-            rigidBody2D.AddForce(Vector2.up * jumpForse);
+            countJumps = countJumpsValue;
         }
-        if (Input.GetKeyDown(KeyCode.Space) && rigidBody2D.velocity.y > 0f && countJumps < 2)
-        {
-            countJumps++;
+        if(Input.GetKeyDown(KeyCode.Space) && countJumps > 0)
+        {   
             rigidBody2D.AddForce(Vector2.up * jumpForse);
-            
+            countJumps--;
+        }
+        else if (Input.GetKeyDown(KeyCode.Space) && countJumps == 0 && isGrounded)
+        {
+            rigidBody2D.AddForce(Vector2.up * jumpForse);
         }
     }
 
     private void checkIsGround()
     {
-        if (Physics2D.Raycast(transform.position, Vector3.down, 0.1f))
+        RaycastHit2D hit = Physics2D.Raycast(capsuleCollider2D.bounds.center, Vector2.down, capsuleCollider2D.bounds.extents.y + 0.1f);
+        if (hit.collider != null)
         {
             isGrounded = true;
-            countJumps = 0;
         }
         else
             isGrounded = false;
