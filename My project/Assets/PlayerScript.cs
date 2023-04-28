@@ -30,7 +30,7 @@ public class PlayerScript : MonoBehaviour
         flip();
         jump();
         checkIsGround();
-        Debug.Log(countJumps);
+        
         
     }
 

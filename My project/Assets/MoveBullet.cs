@@ -5,21 +5,17 @@ using UnityEngine;
 public class MoveBullet : MonoBehaviour
 {
     public float speedBullet;
-    PlayerScript player;
-    
     
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, 5);
-        
-        
-        
+        Destroy(gameObject, 3);
+  
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(transform.forward * Time.deltaTime * speedBullet);
+        transform.Translate(transform.position * Time.deltaTime * speedBullet);
     }
 }
