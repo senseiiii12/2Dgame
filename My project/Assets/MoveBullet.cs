@@ -24,6 +24,7 @@ public class MoveBullet : MonoBehaviour
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
+           
         }
         Destroy(gameObject);
     }

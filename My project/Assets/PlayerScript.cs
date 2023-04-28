@@ -10,6 +10,7 @@ public class PlayerScript : MonoBehaviour
     private bool isGrounded;
     int countJumps;
     public int countJumpsValue;
+    public int PlayerHealth = 100;
 
     [SerializeField]
     private float speed, jumpForse;
